@@ -1339,3 +1339,118 @@ footer a:hover{opacity:1;color:var(--copper)}
   padding:5px;
   background:#fff;
 }
+
+#paypalButtonContainer{
+  margin-top:18px;
+  max-width:420px;
+}
+
+.paypal-error{
+  padding:14px 16px;
+  border-radius:14px;
+  background:rgba(200,117,61,.1);
+  color:var(--copper);
+  font-weight:700;
+  font-size:.9rem;
+}
+
+.paypal-box{
+  display:grid;
+  gap:12px;
+}
+
+.paypal-logo{
+  width:max-content;
+  padding:10px 18px;
+  border-radius:999px;
+  background:#003087;
+  color:#fff;
+  font-weight:800;
+  letter-spacing:.02em;
+}
+
+/* PayPal + Order Checkout */
+.payment-options{
+  display:grid;
+  gap:12px;
+}
+
+.payment-option{
+  display:flex;
+  gap:12px;
+  align-items:flex-start;
+  padding:16px;
+  border:1px solid rgba(46,51,41,.12);
+  border-radius:20px;
+  background:rgba(255,255,255,.45);
+  cursor:pointer;
+  transition:.25s ease;
+}
+
+.payment-option input{
+  margin-top:4px;
+  accent-color:var(--copper);
+}
+
+.payment-option strong{
+  display:block;
+  color:var(--espresso);
+  font-size:.95rem;
+}
+
+.payment-option small{
+  display:block;
+  margin-top:4px;
+  color:rgba(46,51,41,.62);
+  font-size:.8rem;
+  line-height:1.45;
+}
+
+.payment-option.active{
+  border-color:rgba(200,117,61,.58);
+  background:rgba(200,117,61,.09);
+  box-shadow:0 16px 34px rgba(200,117,61,.08);
+}
+
+.payment-panel{
+  display:none;
+  margin-top:16px;
+  padding:20px;
+  border-radius:20px;
+  background:rgba(248,244,236,.75);
+  border:1px solid rgba(46,51,41,.08);
+}
+
+.payment-panel.show{
+  display:block;
+}
+
+#paypalButtonContainer{
+  margin-top:18px;
+  max-width:460px;
+}
+
+.paypal-logo{
+  width:max-content;
+  padding:10px 18px;
+  border-radius:999px;
+  background:#003087;
+  color:#fff;
+  font-weight:800;
+  letter-spacing:.02em;
+}
+
+.paypal-error{
+  padding:14px 16px;
+  border-radius:14px;
+  background:rgba(200,117,61,.1);
+  color:var(--copper);
+  font-weight:700;
+  font-size:.9rem;
+}
+
+.checkout-safe-note{
+  margin-top:12px;
+  font-size:.8rem !important;
+  color:rgba(46,51,41,.62) !important;
+}

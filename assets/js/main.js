@@ -228,110 +228,6 @@ function cartContact(){
 
 /* ---------- Checkout page ---------- */
 function renderCheckout(){
-  function initCheckoutEvents(){
-  const radios = document.querySelectorAll('input[name="paymentMethod"]');
-  const options = document.querySelectorAll('.payment-option');
-
-  radios.forEach(radio=>{
-    radio.addEventListener('change',()=>{
-      const value = radio.value;
-
-      options.forEach(option=>{
-        option.classList.toggle('active', option.dataset.payment === value);
-      });
-
-      document.getElementById('orderPanel')?.classList.toggle('show', value === 'order');
-      document.getElementById('paypalPanel')?.classList.toggle('show', value === 'paypal');
-      document.getElementById('cardPanel')?.classList.toggle('show', value === 'card');
-
-      toggleCardRequired(value === 'card');
-    });
-  });
-
-  const form = document.getElementById('checkoutForm');
-  if(!form) return;
-
-  form.addEventListener('submit', e=>{
-    e.preventDefault();
-
-    const selectedPayment =
-      document.querySelector('input[name="paymentMethod"]:checked')?.value || 'order';
-
-    if(selectedPayment === 'card' && !validateCardForm()){
-      return;
-    }
-
-    const success = document.getElementById('checkoutSuccess');
-
-    if(success){
-      if(selectedPayment === 'order'){
-        success.textContent = 'Your order has been submitted successfully. Redirecting...';
-      }
-
-      if(selectedPayment === 'paypal'){
-        success.textContent = 'PayPal checkout request has been prepared. Redirecting...';
-      }
-
-      if(selectedPayment === 'card'){
-        success.textContent = 'Card order has been submitted successfully. Redirecting...';
-      }
-
-      success.classList.add('show');
-    }
-
-    localStorage.setItem('lastPaymentMethod', selectedPayment);
-    localStorage.removeItem('lastOrderRef');
-
-    localStorage.removeItem(CART_KEY);
-    updateBadge();
-
-    form.reset();
-
-    setTimeout(()=>{
-      location.href = `thank.html?method=${selectedPayment}`;
-    }, 900);
-  });
-}
-
-function toggleCardRequired(required){
-  ['cardName','cardNumber','cardExpiry','cardCvv'].forEach(id=>{
-    const el = document.getElementById(id);
-    if(el) el.required = required;
-  });
-}
-
-function validateCardForm(){
-  const cardName = document.getElementById('cardName')?.value.trim();
-  const cardNumber = document.getElementById('cardNumber')?.value.replace(/\s+/g,'');
-  const cardExpiry = document.getElementById('cardExpiry')?.value.trim();
-  const cardCvv = document.getElementById('cardCvv')?.value.trim();
-
-  if(!cardName || !cardNumber || !cardExpiry || !cardCvv){
-    toast('Please complete all card details.');
-    return false;
-  }
-
-  if(!/^\d{13,19}$/.test(cardNumber)){
-    toast('Please enter a valid card number.');
-    return false;
-  }
-
-  if(!/^\d{2}\/\d{2}$/.test(cardExpiry)){
-    toast('Please enter expiry date as MM/YY.');
-    return false;
-  }
-
-  if(!/^\d{3,4}$/.test(cardCvv)){
-    toast('Please enter a valid CVV.');
-    return false;
-  }
-
-  return true;
-}
-
-function simulatePaypalLogin(){
-  toast('Redirecting to PayPal...');
-}
   const root = document.getElementById('checkoutRoot');
   if(!root) return;
 
@@ -354,6 +250,7 @@ function simulatePaypalLogin(){
     .map(c => {
       const p = PRODUCTS.find(x => Number(x.id) === Number(c.id));
       if(!p) return null;
+
       return {
         ...p,
         qty: Number(c.qty) || 1
@@ -366,7 +263,7 @@ function simulatePaypalLogin(){
       <div class="empty-cart">
         <h3 class="serif">Product data not found</h3>
         <p class="muted" style="margin:10px 0 24px">
-          Cart exists, but products.js is not loaded correctly.
+          Cart exists, but product data is not loaded correctly.
         </p>
         <a class="btn btn-primary" href="cart.html">Back to Cart</a>
       </div>
@@ -383,7 +280,7 @@ function simulatePaypalLogin(){
           Your order has been submitted successfully.
         </div>
 
-        <h2 class="serif checkout-title">Customer Information</h2>
+        <h2 class="serif checkout-title">Checkout</h2>
 
         <div class="form-grid">
           <div class="field">
@@ -433,59 +330,37 @@ function simulatePaypalLogin(){
               <input type="radio" name="paymentMethod" value="paypal">
               <span>
                 <strong>PayPal</strong>
-                <small>Continue to PayPal safely.</small>
-              </span>
-            </label>
-
-            <label class="payment-option" data-payment="card">
-              <input type="radio" name="paymentMethod" value="card">
-              <span>
-                <strong>Credit / Debit Card</strong>
-                <small>Enter card details for checkout.</small>
+                <small>Continue with PayPal official checkout.</small>
               </span>
             </label>
           </div>
 
           <div class="payment-panel show" id="orderPanel">
-            <p>Your order will be submitted first. We will contact you to confirm availability, shipping and payment details.</p>
+            <p>
+              Your order will be submitted first. We will contact you to confirm availability,
+              shipping details, and payment arrangement.
+            </p>
           </div>
 
           <div class="payment-panel" id="paypalPanel">
             <div class="paypal-box">
               <div class="paypal-logo">PayPal</div>
-              <p>For safety, PayPal login should happen only on the official PayPal website.</p>
-              <button type="button" class="btn btn-dark no-arrow" onclick="simulatePaypalLogin()">
-                Continue to PayPal
-              </button>
-            </div>
-          </div>
 
-          <div class="payment-panel" id="cardPanel">
-            <div class="form-grid">
-              <div class="field full">
-                <label>Cardholder Name</label>
-                <input type="text" id="cardName">
-              </div>
+              <p>
+                Please continue with the official PayPal button below. You will log in directly through PayPal.
+                This website does not collect or store your PayPal password.
+              </p>
 
-              <div class="field full">
-                <label>Card Number</label>
-                <input type="text" id="cardNumber" maxlength="19" placeholder="1234 5678 9012 3456">
-              </div>
+              <div id="paypalButtonContainer"></div>
 
-              <div class="field">
-                <label>Expiry Date</label>
-                <input type="text" id="cardExpiry" maxlength="5" placeholder="MM/YY">
-              </div>
-
-              <div class="field">
-                <label>CVV</label>
-                <input type="password" id="cardCvv" maxlength="4" placeholder="***">
-              </div>
+              <p class="checkout-safe-note">
+                After PayPal payment is completed, your cart will be cleared and you will be redirected to the thank you page.
+              </p>
             </div>
           </div>
         </div>
 
-        <button type="submit" class="btn btn-primary no-arrow checkout-submit">
+        <button type="submit" class="btn btn-primary no-arrow checkout-submit" id="checkoutSubmitBtn">
           Place Order
         </button>
       </form>
@@ -518,7 +393,137 @@ function simulatePaypalLogin(){
     </div>
   `;
 
-  initCheckoutEvents();
+  initCheckoutEvents(total);
+}
+
+function initCheckoutEvents(total){
+  const radios = document.querySelectorAll('input[name="paymentMethod"]');
+  const options = document.querySelectorAll('.payment-option');
+  const submitBtn = document.getElementById('checkoutSubmitBtn');
+
+  radios.forEach(radio=>{
+    radio.addEventListener('change',()=>{
+      const value = radio.value;
+
+      options.forEach(option=>{
+        option.classList.toggle('active', option.dataset.payment === value);
+      });
+
+      document.getElementById('orderPanel')?.classList.toggle('show', value === 'order');
+      document.getElementById('paypalPanel')?.classList.toggle('show', value === 'paypal');
+
+      if(value === 'paypal'){
+        if(submitBtn) submitBtn.style.display = 'none';
+        renderPaypalButton(total);
+      }
+
+      if(value === 'order'){
+        if(submitBtn) submitBtn.style.display = 'inline-flex';
+      }
+    });
+  });
+
+  const form = document.getElementById('checkoutForm');
+  if(!form) return;
+
+  form.addEventListener('submit', e=>{
+    e.preventDefault();
+
+    const selectedPayment =
+      document.querySelector('input[name="paymentMethod"]:checked')?.value || 'order';
+
+    if(selectedPayment === 'paypal'){
+      toast('Please use the PayPal button to continue.');
+      return;
+    }
+
+    const success = document.getElementById('checkoutSuccess');
+
+    if(success){
+      success.textContent = 'Your order has been submitted successfully. Redirecting...';
+      success.classList.add('show');
+    }
+
+    localStorage.setItem('lastPaymentMethod', 'order');
+    localStorage.removeItem('lastOrderRef');
+    localStorage.removeItem(CART_KEY);
+    updateBadge();
+
+    form.reset();
+
+    setTimeout(()=>{
+      location.href = 'thank.html?method=order';
+    }, 900);
+  });
+}
+
+function renderPaypalButton(total){
+  const container = document.getElementById('paypalButtonContainer');
+  if(!container) return;
+
+  container.innerHTML = '';
+
+  if(!window.paypal){
+    container.innerHTML = `
+      <div class="paypal-error">
+        PayPal is not loaded. Please check the PayPal SDK script in checkout.html.
+      </div>
+    `;
+    return;
+  }
+
+  paypal.Buttons({
+    fundingSource: paypal.FUNDING.PAYPAL,
+    style: {
+      layout: 'vertical',
+      color: 'gold',
+      shape: 'pill',
+      label: 'paypal'
+    },
+
+    createOrder: function(data, actions){
+      return actions.order.create({
+        purchase_units: [
+          {
+            description: 'Kitchen Products Order',
+            amount: {
+              currency_code: 'USD',
+              value: total.toFixed(2)
+            }
+          }
+        ]
+      });
+    },
+
+    onApprove: function(data, actions){
+      return actions.order.capture().then(function(details){
+        localStorage.setItem('lastPaymentMethod', 'paypal');
+        localStorage.removeItem('lastOrderRef');
+        localStorage.removeItem(CART_KEY);
+
+        updateBadge();
+
+        const success = document.getElementById('checkoutSuccess');
+        if(success){
+          success.textContent = 'PayPal payment completed successfully. Redirecting...';
+          success.classList.add('show');
+        }
+
+        setTimeout(()=>{
+          location.href = 'thank.html?method=paypal';
+        }, 900);
+      });
+    },
+
+    onCancel: function(){
+      toast('PayPal payment was cancelled.');
+    },
+
+    onError: function(err){
+      console.error(err);
+      toast('PayPal payment could not be completed.');
+    }
+  }).render('#paypalButtonContainer');
 }
 
 /* ---------- Thank You page ---------- */
@@ -533,23 +538,16 @@ function renderThankPage(){
     order: {
       label: 'Order Submitted',
       title: 'Your order request has been submitted.',
-      text: 'We will review your selected products and contact you soon to confirm availability, shipping details, and final order arrangement.',
+      text: 'Thank you for your order request. We will review your selected products and contact you soon to confirm availability, shipping details, and final arrangement.',
       badge: 'ORDER REQUEST'
     },
     paypal: {
-      label: 'PayPal Request Prepared',
-      title: 'Your PayPal checkout request has been prepared.',
-      text: 'For security, PayPal login and payment should be completed only through the official PayPal payment page. Our team will contact you with the next secure step.',
-      badge: 'PAYPAL'
-    },
-    card: {
-      label: 'Card Order Submitted',
-      title: 'Your card order has been submitted.',
-      text: 'Your checkout request has been received. Please note this demo website does not store card information. Our team will contact you if any further confirmation is needed.',
-      badge: 'CARD'
+      label: 'PayPal Payment Completed',
+      title: 'Your PayPal payment has been completed.',
+      text: 'Thank you for your order. Your payment was processed through PayPal and your order request has been received successfully.',
+      badge: 'PAYPAL PAYMENT'
     }
   };
-
   const data = thankData[method] || thankData.order;
 
   root.innerHTML = `
