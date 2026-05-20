@@ -1,0 +1,58 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Contact — CARLY JO OETKER</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,500&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
+</head><body data-page="contact">
+<div class="page-loader"><div class="loader-dot"></div></div>
+<section class="page-hero"><div class="container">
+  <div class="breadcrumb">Home / Contact</div>
+  <h1 class="serif">Let's talk smart kitchens.</h1>
+  <p>Send us your questions about product availability, bulk inquiries, gifting or care. We respond personally to every message.</p>
+</div></section>
+<section style="padding-top:20px"><div class="container">
+  <div class="contact-wrap">
+    <div class="form-card reveal">
+      <div class="success-msg" id="successMsg">Thank you. Your inquiry has been prepared successfully.</div>
+      <form id="contactForm" class="form-grid">
+        <div class="field"><label>Full Name</label><input type="text" required></div>
+        <div class="field"><label>Email</label><input type="email" required></div>
+        <div class="field"><label>Phone</label><input type="tel"></div>
+        <div class="field"><label>Subject</label><input type="text" required></div>
+        <div class="inquiry-type-box" id="inquiryTypeBox">
+        <div class="inquiry-type-title">Inquiry Type</div>
+
+        <label class="inquiry-option active" data-type="product">
+          <input type="radio" name="inquiryType" value="product">
+          <span>
+            <strong>Ask about products in cart</strong>
+            <small>Show products from cart and include them in the message.</small>
+          </span>
+        </label>
+
+        <label class="inquiry-option" data-type="general">
+          <input type="radio" name="inquiryType" value="general">
+          <span>
+            <strong>General inquiry</strong>
+            <small>Hide cart products and send a normal contact message.</small>
+          </span>
+        </label>
+      </div>
+
+      <div id="contactProductPreview" class="contact-product-preview"></div>
+        <div id="contactProductPreview" class="contact-product-preview"></div>
+        <div class="field full"><label>Message</label><textarea id="messageField" required placeholder="Tell us how we can help…"></textarea></div>
+        <div class="field full"><button class="btn btn-primary no-arrow" type="submit">Send Inquiry</button></div>
+      </form>
+    </div>
+    <div class="contact-info reveal">
+      <div class="info-card"><div class="ico">✉</div><h4>Email</h4><p>ellagracemoriera6sz@hotmail.com</p></div>
+      <div class="info-card"><div class="ico">☎</div><h4>Phone</h4><p>+1 7407101804</p></div>
+      <div class="info-card"><div class="ico">⌂</div><h4>Address</h4><p>CARLY JO OETKER<br>West Grant Street 1 Marshalltown<br>Iowa 50158 United States of America<br>State</p></div>
+      <div class="info-card" style="background:var(--graphite);color:var(--ceramic)"><h4 style="color:var(--sage)">Support note</h4><p style="color:var(--ceramic);opacity:.85">Need help selecting the right smart kitchen tool? Share your routine and we'll suggest the right products for your home.</p></div>
+    </div>
+  </div>
+  <div class="map-placeholder reveal">Marshalltown, Iowa — CARLY JO OETKER</div>
+</div></section>
+<script src="assets/js/product.js"></script>
+<script src="assets/js/main.js"></script></body></html>
